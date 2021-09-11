@@ -1,6 +1,6 @@
-import { SafeAreaView, StyleSheet, Dimensions } from "react-native";
+import { SafeAreaView, StyleSheet, Dimensions, View, Text } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Localization from "expo-localization";
 import { getChargingSpots } from "../services/apiServices";
@@ -61,7 +61,17 @@ const Map = () => {
           longitude: Longitude,
         };
 
-        return <Marker key={ID} coordinate={spotLocation} />;
+        return (
+          <Marker key={ID} coordinate={spotLocation}>
+            <Callout>
+              <View>
+                <Text>{Title}</Text>
+                <Text>{ID}</Text>
+                <Text>Press to select charging spot</Text>
+              </View>
+            </Callout>
+          </Marker>
+        );
       })
     : null;
 
