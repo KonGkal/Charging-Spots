@@ -1,11 +1,33 @@
-import { SafeAreaView, StyleSheet, Dimensions, Text } from "react-native";
-import React, { useRef } from "react";
+import { SafeAreaView, StyleSheet, Dimensions } from "react-native";
+import React, { useRef, useEffect } from "react";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import { FC } from "react-router/node_modules/@types/react";
+import * as Location from "expo-location";
+import * as Localization from "expo-localization";
 
-const Map: FC = () => {
+const Map = () => {
   const mapView = useRef<MapView>(null);
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        return;
+      }
+
+      let locationSuccess = false;
+      while (!locationSuccess) {
+        try {
+          const location = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.High,
+          });
+          const { region } = await Localization.getLocalizationAsync();
+          locationSuccess = true;
+        } catch (error) {
+          console.log("retrying....");
+        }
+      }
+    })();
+  }, []);
   return (
     <SafeAreaView>
       <MapView
