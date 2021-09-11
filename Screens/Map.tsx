@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, Dimensions } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Localization from "expo-localization";
 import { getChargingSpots } from "../services/apiServices";
@@ -48,6 +48,23 @@ const Map = () => {
       }
     })();
   }, []);
+
+  const chargingSpotMarkers = chargingSpots
+    ? chargingSpots.map((spot) => {
+        const {
+          ID,
+          AddressInfo: { Title, Latitude, Longitude },
+        } = spot;
+
+        const spotLocation = {
+          latitude: Latitude,
+          longitude: Longitude,
+        };
+
+        return <Marker key={ID} coordinate={spotLocation} />;
+      })
+    : null;
+
   return (
     <SafeAreaView>
       <MapView
@@ -59,7 +76,9 @@ const Map = () => {
         showsTraffic
         zoomEnabled
         style={styles.map}
-      />
+      >
+        {chargingSpotMarkers}
+      </MapView>
     </SafeAreaView>
   );
 };
