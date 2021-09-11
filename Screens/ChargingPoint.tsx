@@ -19,8 +19,15 @@ const ChargingPoint: FC = () => {
       <View style={styles.contentContainer}>
         <Text style={globalStyles.text}>{title}</Text>
         <Text style={globalStyles.text}>Charging Point Id: {id}</Text>
-        <Pressable onPress={handleCharging}>
-          <Text>Start Charging</Text>
+        <Pressable
+          style={
+            charging
+              ? [styles.pressable, { backgroundColor: "red" }]
+              : [styles.pressable, { backgroundColor: "#6b4" }]
+          }
+          onPress={handleCharging}
+        >
+          <Text>{charging ? "Stop Charging" : "Start Charging"}</Text>
         </Pressable>
       </View>
       <NavFooter />
