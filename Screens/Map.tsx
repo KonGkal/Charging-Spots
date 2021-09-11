@@ -1,27 +1,33 @@
-import { SafeAreaView, StyleSheet, Dimensions } from "react-native";
-import React, { useRef, useEffect, useState } from "react";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import { SafeAreaView, StyleSheet, Dimensions, View, Text } from "react-native";
+import React, { useRef, useEffect, useState, FC } from "react";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { useHistory } from "react-router-native";
 import * as Location from "expo-location";
 import * as Localization from "expo-localization";
 import { getChargingSpots } from "../services/apiServices";
+import globalStyles from "../globalStyles/globalStyles";
 
-const Map = () => {
+const Map: FC = () => {
   const [chargingSpots, setChargingSpots] = useState<SpotData[]>();
   const mapView = useRef<MapView>(null);
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
+
       if (status !== "granted") {
         return;
       }
 
       let locationSuccess = false;
+
       while (!locationSuccess) {
         try {
           const location = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.High,
           });
+
           const { region } = await Localization.getLocalizationAsync();
 
           const userLocation = {
@@ -38,6 +44,8 @@ const Map = () => {
               userLocation.longitude
             );
 
+            centerToUser(userLocation);
+
             spots.data && setChargingSpots(spots.data);
           }
 
@@ -48,18 +56,56 @@ const Map = () => {
       }
     })();
   }, []);
+
+  function centerToUser(userLocation: Region): void {
+    mapView.current?.animateToRegion(userLocation, 1000);
+  }
+
+  const chargingSpotMarkers = chargingSpots
+    ? chargingSpots.map((spot) => {
+        const {
+          ID,
+          AddressInfo: { Title, Latitude, Longitude },
+        } = spot;
+
+        const spotLocation = {
+          latitude: Latitude,
+          longitude: Longitude,
+        };
+
+        return (
+          <Marker key={ID} coordinate={spotLocation}>
+            <Callout
+              onPress={() => history.push(`/chargingpoint/${ID}/${Title}`)}
+            >
+              <View style={globalStyles.container}>
+                <Text style={globalStyles.text}>{Title}</Text>
+                <Text style={globalStyles.text}>{ID}</Text>
+                <Text style={globalStyles.text}>
+                  Press to select charging spot
+                </Text>
+              </View>
+            </Callout>
+          </Marker>
+        );
+      })
+    : null;
+
   return (
     <SafeAreaView>
       <MapView
         provider={PROVIDER_GOOGLE}
-        mapType="terrain"
+        mapType="standard"
         ref={mapView}
         showsUserLocation
         showsMyLocationButton
         showsTraffic
         zoomEnabled
+        showsCompass
         style={styles.map}
-      />
+      >
+        {chargingSpotMarkers}
+      </MapView>
     </SafeAreaView>
   );
 };
@@ -113,3 +159,10 @@ interface SpotData {
   DateCreated: string;
   SubmissionStatusTypeID: number;
 }
+
+type Region = {
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+};
