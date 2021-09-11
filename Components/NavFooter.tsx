@@ -1,8 +1,8 @@
-import React from "react";
+import React, { FC } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useHistory } from "react-router-native";
 
-const NavFooter = () => {
+const NavFooter: FC = () => {
   const history = useHistory();
   return (
     <View style={styles.container}>

@@ -27,7 +27,9 @@ const ChargingPoint: FC = () => {
           }
           onPress={handleCharging}
         >
-          <Text>{charging ? "Stop Charging" : "Start Charging"}</Text>
+          <Text style={globalStyles.buttonText}>
+            {charging ? "Stop Charging" : "Start Charging"}
+          </Text>
         </Pressable>
       </View>
       <NavFooter />

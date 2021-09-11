@@ -5,6 +5,7 @@ import { useHistory } from "react-router-native";
 import * as Location from "expo-location";
 import * as Localization from "expo-localization";
 import { getChargingSpots } from "../services/apiServices";
+import globalStyles from "../globalStyles/globalStyles";
 
 const Map: FC = () => {
   const [chargingSpots, setChargingSpots] = useState<SpotData[]>();
@@ -14,16 +15,19 @@ const Map: FC = () => {
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
+
       if (status !== "granted") {
         return;
       }
 
       let locationSuccess = false;
+
       while (!locationSuccess) {
         try {
           const location = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.High,
           });
+
           const { region } = await Localization.getLocalizationAsync();
 
           const userLocation = {
@@ -40,6 +44,8 @@ const Map: FC = () => {
               userLocation.longitude
             );
 
+            centerToUser(userLocation);
+
             spots.data && setChargingSpots(spots.data);
           }
 
@@ -50,6 +56,10 @@ const Map: FC = () => {
       }
     })();
   }, []);
+
+  function centerToUser(userLocation: Region): void {
+    mapView.current?.animateToRegion(userLocation, 1000);
+  }
 
   const chargingSpotMarkers = chargingSpots
     ? chargingSpots.map((spot) => {
@@ -147,3 +157,10 @@ interface SpotData {
   DateCreated: string;
   SubmissionStatusTypeID: number;
 }
+
+type Region = {
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+};
