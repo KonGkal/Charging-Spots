@@ -23,3 +23,19 @@ export const getChargingSpots = async (
   });
   return response;
 };
+
+export const startCharging = async (
+  user: number,
+  carId: number,
+  chargerId: number
+) => {
+  try {
+    axios.post("https://example.ev.energy/chargingsession", {
+      user,
+      carId,
+      chargerId,
+    });
+  } catch (error) {
+    console.log("Charging....");
+  }
+};

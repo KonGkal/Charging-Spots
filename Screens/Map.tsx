@@ -48,8 +48,6 @@ const Map = () => {
       }
     })();
   }, []);
-
-  chargingSpots && console.log(chargingSpots);
   return (
     <SafeAreaView>
       <MapView
