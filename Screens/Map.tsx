@@ -1,13 +1,15 @@
 import { SafeAreaView, StyleSheet, Dimensions, View, Text } from "react-native";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, FC } from "react";
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { useHistory } from "react-router-native";
 import * as Location from "expo-location";
 import * as Localization from "expo-localization";
 import { getChargingSpots } from "../services/apiServices";
 
-const Map = () => {
+const Map: FC = () => {
   const [chargingSpots, setChargingSpots] = useState<SpotData[]>();
   const mapView = useRef<MapView>(null);
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -63,7 +65,9 @@ const Map = () => {
 
         return (
           <Marker key={ID} coordinate={spotLocation}>
-            <Callout>
+            <Callout
+              onPress={() => history.push(`/chargingpoint/${ID}/${Title}`)}
+            >
               <View>
                 <Text>{Title}</Text>
                 <Text>{ID}</Text>
@@ -79,12 +83,13 @@ const Map = () => {
     <SafeAreaView>
       <MapView
         provider={PROVIDER_GOOGLE}
-        mapType="terrain"
+        mapType="standard"
         ref={mapView}
         showsUserLocation
         showsMyLocationButton
         showsTraffic
         zoomEnabled
+        showsCompass
         style={styles.map}
       >
         {chargingSpotMarkers}

@@ -1,5 +1,4 @@
-import React from "react";
-import { FC } from "react-router/node_modules/@types/react";
+import React, { FC } from "react";
 import { Pressable, View, Text } from "react-native";
 import { useHistory } from "react-router-native";
 
