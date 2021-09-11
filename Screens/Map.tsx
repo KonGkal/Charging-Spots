@@ -78,10 +78,12 @@ const Map: FC = () => {
             <Callout
               onPress={() => history.push(`/chargingpoint/${ID}/${Title}`)}
             >
-              <View>
-                <Text>{Title}</Text>
-                <Text>{ID}</Text>
-                <Text>Press to select charging spot</Text>
+              <View style={globalStyles.container}>
+                <Text style={globalStyles.text}>{Title}</Text>
+                <Text style={globalStyles.text}>{ID}</Text>
+                <Text style={globalStyles.text}>
+                  Press to select charging spot
+                </Text>
               </View>
             </Callout>
           </Marker>
