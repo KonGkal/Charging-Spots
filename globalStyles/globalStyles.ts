@@ -7,6 +7,10 @@ const globalStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
 });
 
 export default globalStyles;
