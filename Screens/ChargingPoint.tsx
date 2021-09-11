@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import { useParams } from "react-router-native";
-import globalStyles from "../globalStyles/globalStyles";
+import NavFooter from "../Components/NavFooter";
 
 const ChargingPoint: FC = () => {
   const { id, title } = useParams<{ id: string; title: string }>();
@@ -12,6 +12,7 @@ const ChargingPoint: FC = () => {
         <Text>{title}</Text>
         <Text>Charging Point Id: {id}</Text>
       </View>
+      <NavFooter />
     </View>
   );
 };
