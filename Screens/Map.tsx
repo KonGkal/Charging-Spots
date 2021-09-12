@@ -37,17 +37,9 @@ const Map: FC = () => {
             longitudeDelta: 0.5,
           };
 
-          if (region && userLocation) {
-            const spots = await getChargingSpots(
-              region,
-              userLocation.latitude,
-              userLocation.longitude
-            );
-
-            centerToUser(userLocation);
-
-            spots.data && setChargingSpots(spots.data);
-          }
+          region &&
+            userLocation &&
+            (await handleApiResponse(region, userLocation));
 
           locationSuccess = true;
         } catch (error) {
@@ -56,6 +48,18 @@ const Map: FC = () => {
       }
     })();
   }, []);
+
+  async function handleApiResponse(region: string, userLocation: Region) {
+    const spots = await getChargingSpots(
+      region,
+      userLocation.latitude,
+      userLocation.longitude
+    );
+
+    centerToUser(userLocation);
+
+    spots.data && setChargingSpots(spots.data);
+  }
 
   function centerToUser(userLocation: Region): void {
     mapView.current?.animateToRegion(userLocation, 1000);
