@@ -50,7 +50,7 @@ With the response data from the API markers are being created and rendered on th
 On the selected charging spot the user can begin charging the vehicle.
 
 ## Notes about the functionality of the app.
-* When a charging spot is selected and the `Start Charging` functionality is triggered an exeption will be thrown. 
+* When a charging spot is selected and the `Start Charging` functionality is triggered an exception will be thrown. 
 That is because the post request triggered by the press of the `Start Charging` button will call a function which makes a post request with an invalid example URL.
 * The `Location.getCurrentPositionAsync()` of the expo <a href="https://docs.expo.dev/versions/latest/sdk/location/">Location</a> package that is inside the 
 `useEffect` of the `Map` screen seems to be having performance inconsistencies (given the same data on the same call some times it will respond and some times it will not) that are related to the package which I solved by making continous calls to the method until
